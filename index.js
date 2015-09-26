@@ -5,7 +5,7 @@ module.exports = CipherBase
 inherits(CipherBase, Transform)
 function CipherBase (hashMode) {
   Transform.call(this)
-  this.hashMode = typeof hashMode === 'string';
+  this.hashMode = typeof hashMode === 'string'
   if (this.hashMode) {
     this[hashMode] = this._finalOrDigest
   } else {
@@ -30,7 +30,11 @@ CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
 CipherBase.prototype._transform = function (data, _, next) {
   var err
   try {
-    this.push(this._update(data))
+    if (this.hashMode) {
+      this._update(data)
+    } else {
+      this.push(this._update(data))
+    }
   } catch (e) {
     err = e
   } finally {

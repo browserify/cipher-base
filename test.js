@@ -42,6 +42,31 @@ test('hash mode', function (t) {
   t.equals(utf8, string)
   t.end()
 })
+test('hash mode as stream', function (t) {
+  inherits(Cipher, CipherBase)
+  function Cipher () {
+    CipherBase.call(this, 'finalName')
+    this._cache = []
+  }
+  Cipher.prototype._update = function (input) {
+    t.ok(Buffer.isBuffer(input))
+    this._cache.push(input)
+  }
+  Cipher.prototype._final = function () {
+    return Buffer.concat(this._cache)
+  }
+  var cipher = new Cipher()
+  cipher.on('error', function (e) {
+    t.notOk(e)
+  })
+  var utf8 = 'abc123abcd'
+  cipher.end(utf8, 'utf8')
+  var update = cipher.read().toString('base64')
+  var string = (new Buffer(update, 'base64')).toString()
+
+  t.equals(utf8, string)
+  t.end()
+})
 test('encodings', function (t) {
   inherits(Cipher, CipherBase)
   function Cipher () {
