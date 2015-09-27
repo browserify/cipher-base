@@ -6,7 +6,7 @@ cipher-base
 Abstract base class to inherit from if you want to create streams implementing
 the same api as node crypto streams.
 
-Requires you to implement 2 methods `_final` and `_update`. `_final` takes a
+Requires you to implement 2 methods `_final` and `_update`. `_update` takes a
 buffer and should return a buffer, `_final` takes no arguments and should return
 a buffer.
 
