@@ -1,6 +1,8 @@
 cipher-base
 ===
 
+[![Build Status](https://travis-ci.org/crypto-browserify/cipher-base.svg)](https://travis-ci.org/crypto-browserify/cipher-base)
+
 Abstract base class to inherit from if you want to create streams implementing
 the same api as node crypto streams.
 
