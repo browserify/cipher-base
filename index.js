@@ -27,6 +27,13 @@ CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
   }
   return outData
 }
+
+CipherBase.prototype.setAutoPadding = function () {}
+
+CipherBase.prototype.getAuthTag = function () {}
+
+CipherBase.prototype.setAAD = function () {}
+
 CipherBase.prototype._transform = function (data, _, next) {
   var err
   try {
