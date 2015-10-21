@@ -30,9 +30,17 @@ CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
 
 CipherBase.prototype.setAutoPadding = function () {}
 
-CipherBase.prototype.getAuthTag = function () {}
+CipherBase.prototype.getAuthTag = function () {
+  throw new Error('Subclasses should implement this')
+}
 
-CipherBase.prototype.setAAD = function () {}
+CipherBase.prototype.setAuthTag = function () {
+  throw new Error('Subclasses should implement this')
+}
+
+CipherBase.prototype.setAAD = function () {
+  throw new Error('Subclasses should implement this')
+}
 
 CipherBase.prototype._transform = function (data, _, next) {
   var err
