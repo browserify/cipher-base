@@ -31,15 +31,15 @@ CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
 CipherBase.prototype.setAutoPadding = function () {}
 
 CipherBase.prototype.getAuthTag = function () {
-  throw new Error('Subclasses should implement this')
+  throw new Error('trying to get auth tag in unsupported state')
 }
 
 CipherBase.prototype.setAuthTag = function () {
-  throw new Error('Subclasses should implement this')
+  throw new Error('trying to set auth tag in unsupported state')
 }
 
 CipherBase.prototype.setAAD = function () {
-  throw new Error('Subclasses should implement this')
+  throw new Error('trying to set aad in unsupported state')
 }
 
 CipherBase.prototype._transform = function (data, _, next) {
