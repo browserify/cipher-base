@@ -1,6 +1,6 @@
 {
   "name": "cipher-base",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "abstract base class for crypto-streams",
   "main": "index.js",
   "scripts": {
