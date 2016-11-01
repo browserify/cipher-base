@@ -1,5 +1,5 @@
 var test = require('tape')
-var CipherBase = require('./')
+var CipherBase = require('../')
 var inherits = require('inherits')
 
 test('basic version', function (t) {
