@@ -11,7 +11,7 @@ function CipherBase (hashMode) {
   } else {
     this.final = this._finalOrDigest
   }
-  this._done_encoding = false;
+  this._done_encoding = false
   this._decoder = null
   this._encoding = null
 }
