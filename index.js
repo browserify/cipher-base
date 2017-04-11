@@ -11,6 +11,7 @@ function CipherBase (hashMode) {
   } else {
     this.final = this._finalOrDigest
   }
+  this._done_encoding = false;
   this._decoder = null
   this._encoding = null
 }
@@ -75,6 +76,9 @@ CipherBase.prototype._finalOrDigest = function (outputEnc) {
 }
 
 CipherBase.prototype._toString = function (value, enc, fin) {
+  if (this._done_encoding) {
+    throw new Error('encoding already ended')
+  }
   if (!this._decoder) {
     this._decoder = new StringDecoder(enc)
     this._encoding = enc
@@ -84,6 +88,7 @@ CipherBase.prototype._toString = function (value, enc, fin) {
   }
   var out = this._decoder.write(value)
   if (fin) {
+    this._done_encoding = true
     out += this._decoder.end()
   }
   return out
