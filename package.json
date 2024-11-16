@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/crypto-browserify/cipher-base#readme",
   "dependencies": {
-    "inherits": "^2.0.1",
-    "safe-buffer": "^5.0.1"
+    "inherits": "^2.0.4",
+    "safe-buffer": "^5.2.1"
   },
   "devDependencies": {
     "@ljharb/eslint-config": "^21.1.1",
