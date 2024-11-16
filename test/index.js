@@ -128,3 +128,28 @@ test('encodings', function (t) {
 		st.equals(txt, enc);
 	});
 });
+
+test('handle UInt16Array', function (t) {
+	function Cipher() {
+		CipherBase.call(this, 'finalName');
+		this._cache = [];
+	}
+	inherits(Cipher, CipherBase);
+	Cipher.prototype._update = function (input) {
+		t.ok(Buffer.isBuffer(input));
+		this._cache.push(input);
+	};
+	Cipher.prototype._final = function () {
+		return Buffer.concat(this._cache);
+	};
+
+	if (ArrayBuffer.isView && (Buffer.prototype instanceof Uint8Array || Buffer.TYPED_ARRAY_SUPPORT)) {
+		var cipher = new Cipher();
+		var final = cipher.update(new Uint16Array([1234, 512])).finalName('hex');
+		t.equals(final, 'd2040002');
+	} else {
+		t.skip('ArrayBuffer.isView and/or TypedArray not fully supported');
+	}
+
+	t.end();
+});

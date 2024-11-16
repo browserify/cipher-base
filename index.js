@@ -22,8 +22,47 @@ function CipherBase(hashMode) {
 }
 inherits(CipherBase, Transform);
 
+var useUint8Array = typeof Uint8Array !== 'undefined';
+var useArrayBuffer = typeof ArrayBuffer !== 'undefined'
+	&& typeof Uint8Array !== 'undefined'
+	&& ArrayBuffer.isView
+	&& (Buffer.prototype instanceof Uint8Array || Buffer.TYPED_ARRAY_SUPPORT);
+
 CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
-	var bufferData = typeof data === 'string' ? Buffer.from(data, inputEnc) : data;
+	var bufferData;
+	if (data instanceof Buffer) {
+		// No need to do anything
+		bufferData = data;
+	} else if (typeof data === 'string') {
+		// Convert strings to Buffer
+		bufferData = Buffer.from(data, inputEnc);
+	} else if (useArrayBuffer && ArrayBuffer.isView(data)) {
+		/*
+		 * Wrap any TypedArray instances and DataViews
+		 * Makes sense only on engines with full TypedArray support -- let Buffer detect that
+		 */
+		bufferData = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+	} else if (useUint8Array && data instanceof Uint8Array) {
+		/*
+		 * Uint8Array in engines where Buffer.from might not work with ArrayBuffer, just copy over
+		 * Doesn't make sense with other TypedArray instances
+		 */
+		bufferData = Buffer.from(data);
+	} else if (
+		Buffer.isBuffer(data)
+		&& data.constructor
+		&& data.constructor.isBuffer
+		&& data.constructor.isBuffer(data)
+	) {
+		/*
+		 * Old Buffer polyfill on an engine that doesn't have TypedArray support
+		 * Also, this is from a different Buffer polyfill implementation then we have, as instanceof check failed
+		 * Convert to our current Buffer implementation
+		 */
+		bufferData = Buffer.from(data);
+	} else {
+		throw new Error('The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView.');
+	}
 
 	var outData = this._update(bufferData);
 	if (this.hashMode) {

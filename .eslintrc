@@ -7,6 +7,11 @@
     "func-style": "off",
   },
 
+  "globals": {
+    "Uint8Array": false,
+    "Uint16Array": false,
+  },
+
   "overrides": [
     {
       "files": [
