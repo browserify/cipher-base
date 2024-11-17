@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.5](https://github.com/browserify/cipher-base/compare/v1.0.4...v1.0.5) - 2024-11-17
+
+### Commits
+
+- [Tests] standard -&gt; eslint, make test dir, etc [`ae02fd6`](https://github.com/browserify/cipher-base/commit/ae02fd6624c41ac4ac18077be797111d1955bc76)
+- [Tests] migrate from travis to GHA [`66387d7`](https://github.com/browserify/cipher-base/commit/66387d71461287ad9067bb1bcbfdc47403a33ee7)
+- [meta] fix package.json indentation [`5c02918`](https://github.com/browserify/cipher-base/commit/5c02918ac58c875ed36913c2dc3e1043f4d1c99c)
+- [Fix] return valid values on multi-byte-wide TypedArray input [`8fd1364`](https://github.com/browserify/cipher-base/commit/8fd136432ca298a664f5637629cf2b42a6c7f294)
+- [meta] add `auto-changelog` [`88dc806`](https://github.com/browserify/cipher-base/commit/88dc806806d3dc41444dbf639c87c00f82c949b3)
+- [meta] add `npmignore` and `safe-publish-latest` [`7a137d7`](https://github.com/browserify/cipher-base/commit/7a137d749ce7ea7ea56b9c096844b1b8ab723f61)
+- Only apps should have lockfiles [`42528f2`](https://github.com/browserify/cipher-base/commit/42528f291db16bf2e7d5f831ebe2ad87fd0b1f42)
+- [Deps] update `inherits`, `safe-buffer` [`0e7a2d9`](https://github.com/browserify/cipher-base/commit/0e7a2d9a33a391e82fa9cf512d6e25cc91ab8613)
+- [meta] add missing `engines.node` [`f2dc13e`](https://github.com/browserify/cipher-base/commit/f2dc13e47bbcf3c873db9a9e0f83e5f29d0783fe)
+
 ## [v1.0.4](https://github.com/browserify/cipher-base/compare/v1.0.3...v1.0.4) - 2017-07-06
 
 ### Merged
