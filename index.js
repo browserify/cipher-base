@@ -28,42 +28,67 @@ var useArrayBuffer = typeof ArrayBuffer !== 'undefined'
 	&& ArrayBuffer.isView
 	&& (Buffer.prototype instanceof Uint8Array || Buffer.TYPED_ARRAY_SUPPORT);
 
-CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
-	var bufferData;
+function toBuffer(data, encoding) {
+	/*
+	 * No need to do anything for exact instance
+	 * This is only valid when safe-buffer.Buffer === buffer.Buffer, i.e. when Buffer.from/Buffer.alloc existed
+	 */
 	if (data instanceof Buffer) {
-		// No need to do anything
-		bufferData = data;
-	} else if (typeof data === 'string') {
-		// Convert strings to Buffer
-		bufferData = Buffer.from(data, inputEnc);
-	} else if (useArrayBuffer && ArrayBuffer.isView(data)) {
-		/*
-		 * Wrap any TypedArray instances and DataViews
-		 * Makes sense only on engines with full TypedArray support -- let Buffer detect that
-		 */
-		bufferData = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-	} else if (useUint8Array && data instanceof Uint8Array) {
-		/*
-		 * Uint8Array in engines where Buffer.from might not work with ArrayBuffer, just copy over
-		 * Doesn't make sense with other TypedArray instances
-		 */
-		bufferData = Buffer.from(data);
-	} else if (
-		Buffer.isBuffer(data)
-		&& data.constructor
-		&& data.constructor.isBuffer
-		&& data.constructor.isBuffer(data)
-	) {
-		/*
-		 * Old Buffer polyfill on an engine that doesn't have TypedArray support
-		 * Also, this is from a different Buffer polyfill implementation then we have, as instanceof check failed
-		 * Convert to our current Buffer implementation
-		 */
-		bufferData = Buffer.from(data);
-	} else {
-		throw new Error('The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView.');
+		return data;
 	}
 
+	// Convert strings to Buffer
+	if (typeof data === 'string') {
+		return Buffer.from(data, encoding);
+	}
+
+	/*
+	 * Wrap any TypedArray instances and DataViews
+	 * Makes sense only on engines with full TypedArray support -- let Buffer detect that
+	 */
+	if (useArrayBuffer && ArrayBuffer.isView(data)) {
+		// Bug in Node.js <6.3.1, which treats this as out-of-bounds
+		if (data.byteLength === 0) {
+			return Buffer.alloc(0);
+		}
+
+		var res = Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+		/*
+		 * Recheck result size, as offset/length doesn't work on Node.js <5.10
+		 * We just go to Uint8Array case if this fails
+		 */
+		if (res.byteLength === data.byteLength) {
+			return res;
+		}
+	}
+
+	/*
+	 * Uint8Array in engines where Buffer.from might not work with ArrayBuffer, just copy over
+	 * Doesn't make sense with other TypedArray instances
+	 */
+	if (useUint8Array && data instanceof Uint8Array) {
+		return Buffer.from(data);
+	}
+
+	/*
+	 * Old Buffer polyfill on an engine that doesn't have TypedArray support
+	 * Also, this is from a different Buffer polyfill implementation then we have, as instanceof check failed
+	 * Convert to our current Buffer implementation
+	 */
+	if (
+		Buffer.isBuffer(data)
+			&& data.constructor
+			&& typeof data.constructor.isBuffer === 'function'
+			&& data.constructor.isBuffer(data)
+	) {
+		return Buffer.from(data);
+	}
+
+	throw new TypeError('The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView.');
+}
+
+CipherBase.prototype.update = function (data, inputEnc, outputEnc) {
+	var bufferData = toBuffer(data, inputEnc); // asserts correct input type
 	var outData = this._update(bufferData);
 	if (this.hashMode) {
 		return this;

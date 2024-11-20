@@ -129,6 +129,72 @@ test('encodings', function (t) {
 	});
 });
 
+test('handle SafeBuffer instances', function (t) {
+	function Cipher() {
+		CipherBase.call(this, 'finalName');
+		this._cache = [];
+	}
+	inherits(Cipher, CipherBase);
+	Cipher.prototype._update = function (input) {
+		t.ok(Buffer.isBuffer(input));
+		this._cache.push(input);
+	};
+	Cipher.prototype._final = function () {
+		return Buffer.concat(this._cache);
+	};
+
+	var cipher = new Cipher();
+	var final = cipher.update(Buffer.from('a0c1', 'hex')).finalName('hex');
+	t.equals(final, 'a0c1');
+
+	t.end();
+});
+
+test('handle Uint8Array view', function (t) {
+	function Cipher() {
+		CipherBase.call(this, 'finalName');
+		this._cache = [];
+	}
+	inherits(Cipher, CipherBase);
+	Cipher.prototype._update = function (input) {
+		t.ok(Buffer.isBuffer(input));
+		this._cache.push(input);
+	};
+	Cipher.prototype._final = function () {
+		return Buffer.concat(this._cache);
+	};
+
+	var buf = new Uint8Array([0, 1, 2, 3, 4, 5]);
+	var uarr = new Uint8Array(buf.buffer, 2, 3);
+
+	var cipher = new Cipher();
+	var final = cipher.update(uarr).finalName('hex');
+	t.equals(final, '020304');
+
+	t.end();
+});
+
+test('handle empty Uint8Array instances', function (t) {
+	function Cipher() {
+		CipherBase.call(this, 'finalName');
+		this._cache = [];
+	}
+	inherits(Cipher, CipherBase);
+	Cipher.prototype._update = function (input) {
+		t.ok(Buffer.isBuffer(input));
+		this._cache.push(input);
+	};
+	Cipher.prototype._final = function () {
+		return Buffer.concat(this._cache);
+	};
+
+	var cipher = new Cipher();
+	var final = cipher.update(new Uint8Array(0)).finalName('hex');
+	t.equals(final, '');
+
+	t.end();
+});
+
 test('handle UInt16Array', function (t) {
 	function Cipher() {
 		CipherBase.call(this, 'finalName');
