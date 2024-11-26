@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.6](https://github.com/browserify/cipher-base/compare/v1.0.5...v1.0.6) - 2024-11-26
+
+### Commits
+
+- [Fix] io.js 3.0 - Node.js 5.3 typed array support [`b7ddd2a`](https://github.com/browserify/cipher-base/commit/b7ddd2ac24e65cc47befc1e0eb5026422f8ab037)
+
 ## [v1.0.5](https://github.com/browserify/cipher-base/compare/v1.0.4...v1.0.5) - 2024-11-17
 
 ### Commits
