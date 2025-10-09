@@ -5,6 +5,7 @@ var CipherBase = require('../');
 
 var test = require('tape');
 var inherits = require('inherits');
+const os = require('os');
 
 test('basic version', function (t) {
 	function Cipher() {
@@ -212,7 +213,11 @@ test('handle UInt16Array', function (t) {
 	if (ArrayBuffer.isView && (Buffer.prototype instanceof Uint8Array || Buffer.TYPED_ARRAY_SUPPORT)) {
 		var cipher = new Cipher();
 		var final = cipher.update(new Uint16Array([1234, 512])).finalName('hex');
-		t.equals(final, 'd2040002');
+		if ( os.endianness() === "BE") {
+			t.equals(final, '04d20200');
+		} else {
+			t.equals(final, 'd2040002');
+		}
 	} else {
 		t.skip('ArrayBuffer.isView and/or TypedArray not fully supported');
 	}
